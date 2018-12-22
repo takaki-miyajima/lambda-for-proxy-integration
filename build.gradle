@@ -1,0 +1,35 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.11'
+}
+
+group 'lambda-project'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+            "com.amazonaws:aws-lambda-java-core:1.1.0",
+            "com.amazonaws:aws-lambda-java-events:1.1.0",
+            "com.google.code.gson:gson:2.8.0"
+    )
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'LambdaProxyIntegrationHandler-Class': 'com.takaki.lambda.forproxyintegration.handler.LambdaProxyIntegrationHandlerrKt'
+    }
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
